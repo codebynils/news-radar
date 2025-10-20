@@ -1,0 +1,108 @@
+# --- General / OS / Editors ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*.bak
+*.tmp
+~$*
+
+# --- Local environment / secrets ---
+.env
+.env.*
+!/.env.example
+config.py
+*.key
+*.pem
+*.crt
+*.p12
+secrets.json
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+
+# --- Java / Maven / Spring Boot ---
+target/
+*.class
+*.log
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+.springBeans
+.mvn/timing.properties
+
+# --- Node / React ---
+web/node_modules/
+web/.npm/
+web/.eslintcache
+web/.parcel-cache/
+web/.next/
+web/dist/
+web/build/
+web/coverage/
+web/yarn-error.log
+web/package-lock.json
+web/pnpm-lock.yaml
+web/yarn.lock
+
+# --- Frontend assets ---
+*.tiff
+*.tif
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.webp
+/static/scss/.sass-cache/
+web/public/static/tmp/
+web/.vite/
+
+# --- Logs / temp ---
+logs/
+*.log
+*.out
+*.err
+tmp/
+.cache/
+coverage/
+
+# --- Docker / Compose ---
+docker-compose.override.yml
+*.pid
+*.tar
+*.bak
+.envrc
+
+# --- Prometheus / Grafana local state ---
+infra/local/prometheus/data/
+infra/local/grafana/data/
+infra/local/compose/.env
+
+# --- IntelliJ / VS Code auxiliary ---
+.idea/sonarlint/
+.idea/copilot/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/httpRequests/
+
+# --- Azure CLI / Terraform / Bicep ---
+infra/.azure/
+infra/azure/.terraform/
+infra/azure/*.tfstate
+infra/azure/*.tfstate.backup
+*.bicepParameters.json
+
+# --- Tests & reports ---
+surefire-reports/
+test-output/
+*.iml
+

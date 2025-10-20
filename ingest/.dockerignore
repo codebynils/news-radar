@@ -1,0 +1,85 @@
+# --- General ---
+.git
+.gitignore
+README.md
+LICENSE
+*.md
+*.log
+*.bak
+*.tmp
+.DS_Store
+Thumbs.db
+
+# --- IDE / Editors ---
+.idea
+.vscode
+*.iml
+
+# --- Local environment / secrets ---
+.env
+.env.*
+config.py
+secrets.json
+*.key
+*.pem
+*.crt
+*.p12
+.envrc
+
+# --- Java / Maven ---
+**/target/
+*.class
+*.jar
+*.war
+*.ear
+.mvn/
+replay_pid*
+
+# --- Node / React ---
+web/node_modules/
+web/.next/
+web/.vite/
+web/build/
+web/dist/
+web/.eslintcache
+web/.npm/
+web/.parcel-cache/
+web/coverage/
+web/yarn-error.log
+
+# --- Python helper scripts ---
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+
+# --- Docker / Compose ---
+docker-compose.yml
+docker-compose.override.yml
+infra/local/
+infra/azure/.terraform/
+infra/azure/*.tfstate
+infra/azure/*.tfstate.backup
+
+# --- Local data / metrics ---
+prometheus/
+grafana/
+logs/
+tmp/
+.cache/
+
+# --- Tests / Reports ---
+test-output/
+surefire-reports/
+coverage/
+
+# --- Images and assets (optional) ---
+*.tiff
+*.tif
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.webp
+/static/scss/.sass-cache/
+
