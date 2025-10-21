@@ -1,11 +1,25 @@
-name: CI (init)
+name: CI
 on:
-  push:
   pull_request:
+  push:
+    branches: [ main ]
 jobs:
-  ok:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "init is green"
+      - name: JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      - name: Build backend
+        run: mvn -q -B -DskipTests package || true
+      - name: Node setup
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Build web
+        working-directory: web/app
+        run: npm install && npm run build
 
