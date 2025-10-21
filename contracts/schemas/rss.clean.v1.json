@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "rss.clean.v1",
+  "type": "object",
+  "required": ["id", "title", "url", "publishedAt", "source"],
+  "properties": {
+    "id": { "type": "string" },
+    "title": { "type": "string" },
+    "url": { "type": "string", "format": "uri" },
+    "description": { "type": "string" },
+    "source": { "type": "string" },
+    "faviconUrl": { "type": "string", "format": "uri" },
+    "publishedAt": { "type": "string", "format": "date-time" }
+  }
+}
+

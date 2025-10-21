@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "rss.raw.v1",
+  "type": "object",
+  "required": ["guid", "title", "link", "publishedAt", "source"],
+  "properties": {
+    "guid": { "type": "string" },
+    "title": { "type": "string" },
+    "link": { "type": "string", "format": "uri" },
+    "publishedAt": { "type": "string", "format": "date-time" },
+    "description": { "type": "string" },
+    "source": { "type": "string" }
+  }
+}
+
