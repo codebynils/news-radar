@@ -41,18 +41,18 @@ replay_pid*
 .mvn/timing.properties
 
 # --- Node / React ---
-web/node_modules/
-web/.npm/
-web/.eslintcache
-web/.parcel-cache/
+node_modules
+.npm
+.eslintcache
+.parcel-cache/
 web/.next/
 web/dist/
 web/build/
 web/coverage/
-web/yarn-error.log
-web/package-lock.json
-web/pnpm-lock.yaml
-web/yarn.lock
+yarn-error.log
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
 
 # --- Frontend assets ---
 *.tiff
