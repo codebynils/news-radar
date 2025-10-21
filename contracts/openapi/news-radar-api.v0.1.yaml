@@ -1,0 +1,187 @@
+openapi: 3.2.0
+info:
+  title: news-radar API
+  version: 0.1.0
+  description: |
+    Minimal API for Phase 1 of news-radar. Public read-only endpoints
+    to list articles with cursor-based pagination. Opaque cursor encodes
+    (publishedAt,id) for stable "newest-first" paging.
+
+    Sorting: newest first by (publishedAt desc, id desc).
+servers:
+  - url: http://localhost:8081
+    description: Local dev (API)
+  - url: https://api.dev.news-radar.change-later.com
+    description: Dev (Azure)
+tags:
+  - name: Articles
+    description: Read-only access to stored articles.
+
+paths:
+  /articles:
+    get:
+      operationId: listArticles
+      tags: [Articles]
+      summary: List articles (paged, newest first)
+      description: |
+        Returns a page of articles sorted by publishedAt desc (tie-breaker: id desc).
+        Use the opaque `nextCursor` from a response as the `cursor` parameter
+        to retrieve the next page. When `nextCursor` is null, there are no more results.
+
+        The `show` parameter is for relevance filtering in Phase 2, ignored in Phase 1.
+      parameters:
+        - name: limit
+          in: query
+          description: Page size (1–50; default 20).
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 20
+        - name: cursor
+          in: query
+          description: Opaque cursor returned by a previous page (base64-encoded).
+          required: false
+          schema:
+            type: string
+        - name: source
+          in: query
+          description: Optional source filter (e.g., 'bbc', 'tagesschau').
+          required: false
+          schema:
+            type: string
+        - name: show
+          in: query
+          description: |
+            Future flag for relevance filtering (Phase 2).
+            In Phase 1 this is accepted but ignored.
+          required: false
+          schema:
+            type: string
+            enum: [all, relevant, top]
+            default: all
+      responses:
+        '200':
+          description: Paged article list
+          headers:
+            Cache-Control:
+              schema: { type: string }
+              description: Suggested caching header for CDN/browser.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticlePage'
+              examples:
+                sample:
+                  $ref: '#/components/examples/ArticlePageSample'
+        '400':
+          description: Bad request (e.g., invalid cursor)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '500':
+          description: Server error
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+
+components:
+  schemas:
+    Article:
+      type: object
+      required: [id, title, url, source, publishedAt]
+      properties:
+        id:
+          type: string
+          description: Stable unique id (e.g., sha256(link|title|publishedAt))
+        title:
+          type: string
+        url:
+          type: string
+          format: uri
+        description:
+          type: string
+          description: Short abstract/summary; may be truncated from the feed.
+          nullable: true
+        source:
+          type: string
+          description: Normalized short source key (e.g., 'bbc', 'tagesschau')
+        faviconUrl:
+          type: string
+          format: uri
+          nullable: true
+        publishedAt:
+          type: string
+          format: date-time
+          description: RFC 3339 timestamp in UTC (e.g., 2025-10-20T12:34:56Z)
+        relevance:
+          type: number
+          format: float
+          nullable: true
+          description: Optional Phase-2 score (0–1 or arbitrary scale).
+    ArticlePage:
+      type: object
+      required: [items]
+      properties:
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/Article' }
+        nextCursor:
+          type: string
+          nullable: true
+          description: Opaque cursor for the next page, or null if no more.
+    Error:
+      type: object
+      required: [code, message]
+      properties:
+        code:
+          type: string
+          example: BAD_REQUEST
+        message:
+          type: string
+          example: Cursor is invalid or expired.
+        details:
+          nullable: true
+          description: Optional structured details
+          oneOf:
+            - type: object
+            - type: array
+
+  examples:
+    ArticleSample:
+      summary: Single article
+      value:
+        id: "b0b7b1c8e1464f2c9f7f7d7a2a5b4c9e"
+        title: "New Renewable Energy Milestone Reached"
+        url: "https://www.example.com/news/renewables"
+        description: "The sector reported record output this quarter..."
+        source: "example"
+        faviconUrl: "https://www.example.com/favicon.ico"
+        publishedAt: "2025-10-20T11:30:00Z"
+        relevance: null
+    ArticlePageSample:
+      summary: Paged articles
+      value:
+        items:
+          - id: "c9e3d1e2f5a44fcf861d9af0d33b5bba"
+            title: "Berlin transport updates for commuters"
+            url: "https://news.example.org/berlin-transport"
+            description: "Morning delays expected on Line U2..."
+            source: "exampleorg"
+            faviconUrl: "https://news.example.org/favicon.ico"
+            publishedAt: "2025-10-20T12:40:00Z"
+          - id: "b0b7b1c8e1464f2c9f7f7d7a2a5b4c9e"
+            title: "New Renewable Energy Milestone Reached"
+            url: "https://www.example.com/news/renewables"
+            description: "The sector reported record output this quarter..."
+            source: "example"
+            faviconUrl: "https://www.example.com/favicon.ico"
+            publishedAt: "2025-10-20T11:30:00Z"
+        nextCursor: "eyJwdWJsaXNoZWRBdCI6IjIwMjUtMTAtMjBUMTE6MzA6MDBaIiwiaWQiOiJiMGI3YjFjOGUxNDY0ZjJjOWY3ZjdkN2EyYTViNGM5ZSJ9" # base64 of a small JSON blob
+
